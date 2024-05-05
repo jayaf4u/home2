@@ -1,24 +1,32 @@
-trigger:
-- main  # Change this to your default branch name if it's not main
+import os
+import subprocess
+import base64
+from pypaillier import paillier
 
-pool:
-  vmImage: 'ubuntu-latest'
+# GitHub repository information
+repo_directory = "repo"
+file_path = "input.txt"
+repo_url = "https://github.com/jayaf4u/home2.git"  # Replace with your repository URL
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
+# Clone GitHub repository
+subprocess.run(["git", "clone", repo_url, repo_directory], check=True)
 
-- script: |
-    pip install pypaillier
-    python encrypt_data.py  # Adjust this according to the name of your Python script
-  displayName: 'Install dependencies and execute encryption script'
+# Read file content
+with open(os.path.join(repo_directory, file_path), "r") as file:
+    file_content = file.read()
 
-- script: |
-    git config --global user.name 'jayaf4u'
-    git config --global user.email 'jayaf4u@gmail.com'
-    git add encrypted_input.txt
-    git commit -m "Encrypt input.txt file"
-    git push origin main  # Assuming main is the target branch, adjust if necessary
-  displayName: 'Commit changes and push to repository'
+# Perform Paillier encryption
+public_key, private_key = paillier.generate_paillier_keypair()
+
+# Encrypt file content
+encrypted_data = []
+for char in file_content:
+    encrypted_char = public_key.encrypt(ord(char))
+    encrypted_data.append(encrypted_char)
+
+# Save encrypted data to a file
+encrypted_file_path = "encrypted_input.txt"
+with open(encrypted_file_path, "w") as encrypted_file:
+    encrypted_file.write(base64.b64encode(bytes(encrypted_data)).decode())
+
+print("File encrypted and saved as", encrypted_file_path)
