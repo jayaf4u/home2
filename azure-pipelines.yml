@@ -16,7 +16,7 @@ steps:
 
 - script: |
     pip install pypaillier
-    python your_script.py  # Adjust this according to the name of your Python script
+    python encrypt_data.py  # Adjust this according to the name of your Python script
   displayName: 'Install dependencies and execute encryption script'
 
 - script: |
