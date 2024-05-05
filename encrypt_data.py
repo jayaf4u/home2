@@ -65,9 +65,12 @@ public_key, private_key = generate_keys()
 # Encrypt file content
 encrypted_data = encrypt(ascii_values, public_key)
 
+# Convert encrypted data to bytes
+encrypted_bytes = bytes(encrypted_data)
+
 # Save encrypted data to a file
 encrypted_file_path = "encrypted_input.txt"
-with open(encrypted_file_path, "w") as encrypted_file:
-    encrypted_file.write(base64.b64encode(bytes(encrypted_data)).decode())
+with open(encrypted_file_path, "wb") as encrypted_file:  # Use 'wb' mode for writing bytes
+    encrypted_file.write(base64.b64encode(encrypted_bytes))
 
 print("File encrypted and saved as", encrypted_file_path)
