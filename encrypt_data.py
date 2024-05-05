@@ -1,23 +1,33 @@
-python -c "from phe import paillier
+import os
+from github import Github
+from pypaillier import paillier
+import base64
 
-try:
-    # Load the input file
-    with open('input.txt', 'r') as file:
-        data = file.read()
+# GitHub repository information
+github_username = "your_username"
+github_token = "your_token"  # Generate a personal access token from GitHub
+repo_name = "your_repo_name"
+file_path = "input.txt"
 
-    # Perform homomorphic encryption
-    public_key, private_key = paillier.generate_paillier_keypair()
-    encrypted_data = [public_key.encrypt(float(num)) for num in data.split()]
+# Connect to GitHub
+g = Github(github_token)
+repo = g.get_user(github_username).get_repo(repo_name)
 
-    # Save the encrypted data to a new file
-    with open('encrypted_input.txt', 'w') as file:
-        for encrypted_num in encrypted_data:
-            file.write(str(encrypted_num) + '\n')
+# Fetch file content from GitHub
+file_content = repo.get_contents(file_path).decoded_content.decode()
 
-    print('Encryption completed successfully.')
+# Perform Paillier encryption
+public_key, private_key = paillier.generate_paillier_keypair()
 
-except FileNotFoundError:
-    print('Error: input.txt file not found. Make sure it exists in the current directory.')
+# Encrypt file content
+encrypted_data = []
+for char in file_content:
+    encrypted_char = public_key.encrypt(ord(char))
+    encrypted_data.append(encrypted_char)
 
-except Exception as e:
-    print('An error occurred during encryption:', str(e))"
+# Save encrypted data to a file
+encrypted_file_path = "encrypted_input.txt"
+with open(encrypted_file_path, "w") as encrypted_file:
+    encrypted_file.write(base64.b64encode(bytes(encrypted_data)).decode())
+
+print("File encrypted and saved as", encrypted_file_path)
