@@ -1,32 +1,24 @@
-name: Homomorphic Encryption
+trigger:
+- main  # Change this to your default branch name if it's not main
 
-on:
-  push:
-    branches:
-      - main  # Change this to your default branch name if it's not main
+pool:
+  vmImage: 'ubuntu-latest'
 
-jobs:
-  encrypt_file:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
 
-      - name: Install dependencies
-        run: pip install pypaillier
+- script: |
+    pip install pypaillier
+    python encrypt_data.py  # Adjust this according to the name of your Python script
+  displayName: 'Install dependencies and execute encryption script'
 
-      - name: Execute encryption script
-        run: python encrypt_data.py  # Adjust this according to the name of your Python script
-
-      - name: Commit changes
-        run: |
-          git config --global user.name 'jayaf4u'
-          git config --global user.email 'jayaf4u@gmail.com'
-          git add encrypted_input.txt
-          git commit -m "Encrypt input.txt file"
-          git push
+- script: |
+    git config --global user.name 'jayaf4u'
+    git config --global user.email 'jayaf4u@gmail.com'
+    git add encrypted_input.txt
+    git commit -m "Encrypt input.txt file"
+    git push origin main  # Assuming main is the target branch, adjust if necessary
+  displayName: 'Commit changes and push to repository'
