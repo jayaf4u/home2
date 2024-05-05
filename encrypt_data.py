@@ -66,7 +66,7 @@ public_key, private_key = generate_keys()
 encrypted_data = encrypt(ascii_values, public_key)
 
 # Serialize encrypted data to bytes
-encrypted_bytes = b"".join(char.to_bytes(ceil(math.log(char, 256)), 'big') for char in encrypted_data)
+encrypted_bytes = b"".join(char.to_bytes((char.bit_length() + 7) // 8, 'big') for char in encrypted_data)
 
 # Save encrypted data to a file
 encrypted_file_path = "encrypted_input.txt"
