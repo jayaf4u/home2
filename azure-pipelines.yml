@@ -11,7 +11,7 @@ steps:
     addToPath: true
 
 - script: |
-    git clone https://jayaf4u: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@github.com/jayaf4u/home2.git
+    git clone https://jayaf4u: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@github.com/jayaf4u/home2.git
   displayName: 'Clone GitHub repository'
 
 - script: |
