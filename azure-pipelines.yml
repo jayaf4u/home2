@@ -1,39 +1,32 @@
-trigger:
-- main
+name: Homomorphic Encryption
 
-pool:
-  vmImage: 'windows-latest'
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch name if it's not main
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
+jobs:
+  encrypt_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-- script: |
-    pip install phe
-  displayName: 'Install required Python packages'
+      - name: Install dependencies
+        run: pip install pypaillier
 
-- checkout: self
+      - name: Execute encryption script
+        run: python encrypt_data.py  # Adjust this according to the name of your Python script
 
-- script: |
-    from phe import paillier
-
-    # Load the input file
-    with open('input.txt', 'r') as file:
-        data = file.read()
-
-    # Perform homomorphic encryption
-    public_key, private_key = paillier.generate_paillier_keypair()
-    encrypted_data = [public_key.encrypt(float(num)) for num in data.split()]
-
-    # Save the encrypted data to a new file
-    with open('encrypted_input.txt', 'w') as file:
-        for encrypted_num in encrypted_data:
-            file.write(str(encrypted_num) + '\n')
-  displayName: 'Encrypt input.txt file'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.SourcesDirectory)/encrypted_input.txt'
-    artifactName: 'encrypted_data'
+      - name: Commit changes
+        run: |
+          git config --global user.name 'jayaf4u'
+          git config --global user.email 'jayaf4u@gmail.com'
+          git add encrypted_input.txt
+          git commit -m "Encrypt input.txt file"
+          git push
