@@ -11,7 +11,7 @@ steps:
     addToPath: true
 
 - script: |
-    git clone https://github.com/jayaf4u/home2.git
+    git clone https://jayaf4u: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@github.com/jayaf4u/home2.git
   displayName: 'Clone GitHub repository'
 
 - script: |
@@ -31,5 +31,3 @@ steps:
     git commit -m "Encrypt input.txt file"
     git push origin main
   displayName: 'Commit changes and push to repository'
-  env:
-    GIT_TERMINAL_PROMPT: 1  # Enable terminal prompts for Git
