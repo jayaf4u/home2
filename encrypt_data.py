@@ -4,9 +4,9 @@ from pypaillier import paillier
 import base64
 
 # GitHub repository information
-github_username = "your_username"
-github_token = "your_token"  # Generate a personal access token from GitHub
-repo_name = "your_repo_name"
+github_username = "jayaf4u"
+github_token = "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"  # Generate a personal access token from GitHub
+repo_name = "home2"
 file_path = "input.txt"
 
 # Connect to GitHub
