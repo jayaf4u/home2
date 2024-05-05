@@ -14,7 +14,6 @@ steps:
     git clone https://jayaf4u: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@github.com/jayaf4u/home2.git
   displayName: 'Clone GitHub repository'
 
-
 - script: |
     python -m pip install --upgrade pip
     python -m pip install pycryptodome
@@ -24,11 +23,14 @@ steps:
     python encrypt_data.py
   displayName: 'Execute encryption script'
 
-- script: |
-    git config --global user.name 'jayaf4u'
-    git config --global user.email 'jayaf4u@gmail.com'
-    cd home2
-    git add encrypted_input.txt
-    git commit -m "Encrypt input.txt file"
-    git push origin main
-  displayName: 'Commit changes and push to repository'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: 'home2/encrypted_input.txt'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/encrypted_input.zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Publish artifact: encrypted_input.zip'
