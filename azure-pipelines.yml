@@ -11,24 +11,23 @@ steps:
     addToPath: true
 
 - script: |
-    git clone https://github.com/mikeivanov/pypaillier.git
-    cd pypaillier
-    python setup.py install
-  displayName: 'Install pypaillier'
-
-- script: |
     git clone https://github.com/jayaf4u/home2.git
   displayName: 'Clone GitHub repository'
 
 - script: |
-    python encrypt_data.py  # Adjust this according to the name of your Python script
+    python -m pip install --upgrade pip
+    python -m pip install pycryptodome
+  displayName: 'Install required packages'
+
+- script: |
+    python encrypt_data.py
   displayName: 'Execute encryption script'
 
 - script: |
     git config --global user.name 'jayaf4u'
     git config --global user.email 'jayaf4u@gmail.com'
-    cd home2  # Change directory to the cloned repository
+    cd home2
     git add encrypted_input.txt
     git commit -m "Encrypt input.txt file"
-    git push origin main  # Assuming main is the target branch, adjust if necessary
+    git push origin main
   displayName: 'Commit changes and push to repository'
