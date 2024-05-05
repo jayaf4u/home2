@@ -17,10 +17,11 @@ steps:
 - script: |
     python -m pip install --upgrade pip
     python -m pip install pycryptodome
+    pip install seal
   displayName: 'Install required packages'
 
 - script: |
-    python encrypt_data.py
+    python app.py
     mv encrypted_input.txt $(Build.ArtifactStagingDirectory)
   displayName: 'Execute encryption script and move encrypted file to artifact'
 
