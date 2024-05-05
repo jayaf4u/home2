@@ -1,6 +1,7 @@
 import os
-from pypaillier import paillier
+import subprocess
 import base64
+from pypaillier import paillier
 
 # GitHub repository information
 repo_directory = "repo"
@@ -8,7 +9,7 @@ file_path = "input.txt"
 repo_url = "https://github.com/jayaf4u/home2.git"  # Replace with your repository URL
 
 # Clone GitHub repository
-os.system(f"git clone {repo_url} {repo_directory}")
+subprocess.run(["git", "clone", repo_url, repo_directory], check=True)
 
 # Read file content
 with open(os.path.join(repo_directory, file_path), "r") as file:
