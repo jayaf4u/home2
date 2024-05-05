@@ -31,3 +31,5 @@ steps:
     git commit -m "Encrypt input.txt file"
     git push origin main
   displayName: 'Commit changes and push to repository'
+  env:
+    GIT_TERMINAL_PROMPT: 1  # Enable terminal prompts for Git
