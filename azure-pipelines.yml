@@ -17,7 +17,7 @@ steps:
 - script: |
     python -m pip install --upgrade pip
     python -m pip install pycryptodome
-    pip install seal
+    pip install Pyfhel
   displayName: 'Install required packages'
 
 - script: |
