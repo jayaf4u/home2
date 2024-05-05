@@ -14,15 +14,17 @@ steps:
     git clone https://github.com/jayaf4u/home2.git
   displayName: 'Clone GitHub repository'
 
+- script: pip install pypaillier
+  displayName: 'Install pypaillier'
+
 - script: |
-    pip install pypaillier
     python encrypt_data.py  # Adjust this according to the name of your Python script
-  displayName: 'Install dependencies and execute encryption script'
+  displayName: 'Execute encryption script'
 
 - script: |
     git config --global user.name 'jayaf4u'
     git config --global user.email 'jayaf4u@gmail.com'
-    cd your_repo  # Change directory to the cloned repository
+    cd home2  # Change directory to the cloned repository
     git add encrypted_input.txt
     git commit -m "Encrypt input.txt file"
     git push origin main  # Assuming main is the target branch, adjust if necessary
