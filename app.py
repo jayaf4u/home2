@@ -3,18 +3,24 @@ import subprocess
 import base64
 import random
 import math
-import tenseal as ts  # Import TenSEAL library
+import seal  # Import SEAL library
 
 # GitHub repository information
 repo_directory = "repo"
 file_path = "input.txt"
 repo_url = "https://github.com/jayaf4u/home2.git"  # Replace with your repository URL
 
-# Create a TenSEAL context
-context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=4096, coeff_mod_bit_sizes=[40, 40, 40, 40, 40])
+# Create a SEAL context
+parms = seal.EncryptionParameters(seal.SCHEME_TYPE.CKKS)
+poly_modulus_degree = 4096
+parms.set_poly_modulus_degree(poly_modulus_degree)
+parms.set_coeff_modulus(seal.CoeffModulus.Create(poly_modulus_degree, [40, 40, 40, 40, 40]))
+context = seal.Context(parms)
 
 # Generate public and secret keys
-public_key, secret_key = context.keygen()
+keygen = seal.KeyGenerator(context)
+public_key = keygen.public_key()
+secret_key = keygen.secret_key()
 
 # Clone GitHub repository
 subprocess.run(["git", "clone", repo_url, repo_directory], check=True)
@@ -23,15 +29,16 @@ subprocess.run(["git", "clone", repo_url, repo_directory], check=True)
 with open(os.path.join(repo_directory, file_path), "r") as file:
     file_content = file.read()
 
-# Encrypt file content using TenSEAL
-encryptor = ts.Encryptor(context, public_key)
+# Encrypt file content using SEAL
+encryptor = seal.Encryptor(context, public_key)
 encrypted_data = []
 for char in file_content:
-    encrypted_char = encryptor.encrypt(ts.plain_tensor([ord(char)]))
+    encrypted_char = seal.Ciphertext()
+    encryptor.encrypt(seal.Plaintext(char), encrypted_char)
     encrypted_data.append(encrypted_char)
 
 # Serialize encrypted data to bytes
-serialized_data = b"".join([encrypted_char.serialize() for encrypted_char in encrypted_data])
+serialized_data = b"".join([encrypted_char.save() for encrypted_char in encrypted_data])
 
 # Save encrypted data to a file
 encrypted_file_path = "encrypted_input.txt"
