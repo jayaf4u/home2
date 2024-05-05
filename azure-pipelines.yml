@@ -21,16 +21,11 @@ steps:
 
 - script: |
     python encrypt_data.py
-  displayName: 'Execute encryption script'
-
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: 'home2/encrypted_input.txt'
-    includeRootFolder: false
-    archiveFile: '$(Build.ArtifactStagingDirectory)/encrypted_input.zip'
-    replaceExistingArchive: true
+    mv encrypted_input.txt $(Build.ArtifactStagingDirectory)
+  displayName: 'Execute encryption script and move encrypted file to artifact'
 
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Publish artifact: encrypted_input.zip'
+    artifactName: 'encrypted_files'
+  displayName: 'Publish encrypted files as artifact'
