@@ -11,11 +11,14 @@ steps:
     addToPath: true
 
 - script: |
+    git clone https://github.com/mikeivanov/pypaillier.git
+    cd pypaillier
+    python setup.py install
+  displayName: 'Install pypaillier'
+
+- script: |
     git clone https://github.com/jayaf4u/home2.git
   displayName: 'Clone GitHub repository'
-
-- script: pip install pypaillier
-  displayName: 'Install pypaillier'
 
 - script: |
     python encrypt_data.py  # Adjust this according to the name of your Python script
