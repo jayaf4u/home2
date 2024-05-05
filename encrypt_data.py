@@ -1,20 +1,18 @@
 import os
-from github import Github
 from pypaillier import paillier
 import base64
 
 # GitHub repository information
-github_username = "jayaf4u"
-github_token = "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"  # Generate a personal access token from GitHub
-repo_name = "home2"
+repo_directory = "repo"
 file_path = "input.txt"
+repo_url = "https://github.com/jayaf4u/home2.git"  # Replace with your repository URL
 
-# Connect to GitHub
-g = Github(github_token)
-repo = g.get_user(github_username).get_repo(repo_name)
+# Clone GitHub repository
+os.system(f"git clone {repo_url} {repo_directory}")
 
-# Fetch file content from GitHub
-file_content = repo.get_contents(file_path).decoded_content.decode()
+# Read file content
+with open(os.path.join(repo_directory, file_path), "r") as file:
+    file_content = file.read()
 
 # Perform Paillier encryption
 public_key, private_key = paillier.generate_paillier_keypair()
